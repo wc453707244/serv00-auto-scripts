@@ -24,9 +24,11 @@ jobs:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         expect <<EOF
-        spawn ssh $SSH_USER@$SSH_HOST
-        expect "password:"
-        send "$SSH_PASSWORD\r"
+        spawn ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST
+        expect {
+          "(yes/no)" {send "yes\r"; exp_continue}
+          "password:" {send "$SSH_PASSWORD\r"}
+        }
         expect "$ "
         send "cd domains/${{ secrets.SSH_USER1 }}.serv00.net/ && screen -S vless node /home/${{ secrets.SSH_USER1 }}/domains/${{ secrets.SSH_USER1 }}.serv00.net/vless/app.js && screen -r vless\r"
         expect "$ "
@@ -41,12 +43,15 @@ jobs:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         expect <<EOF
-        spawn ssh $SSH_USER@$SSH_HOST
-        expect "password:"
-        send "$SSH_PASSWORD\r"
+        spawn ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST
+        expect {
+          "(yes/no)" {send "yes\r"; exp_continue}
+          "password:" {send "$SSH_PASSWORD\r"}
+        }
         expect "$ "
         send "cd domains/${{ secrets.SSH_USER2 }}.serv00.net/ && screen -S vless node /home/${{ secrets.SSH_USER2 }}/domains/${{ secrets.SSH_USER2 }}.serv00.net/vless/app.js && screen -r vless\r"
         expect "$ "
         send "exit\r"
         expect eof
         EOF
+
