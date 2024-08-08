@@ -1,0 +1,30 @@
+name: SSH and Execute Commands
+
+on:
+  schedule:
+    # 每2小时执行一次
+    - cron: '0 */2 * * *'
+
+jobs:
+  ssh-execute:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H s7.serv00.com >> ~/.ssh/known_hosts
+
+    - name: Execute Commands
+      env:
+        SERVER_IP: s7.serv00.com
+        SERVER_USER_1: wc453707243
+        SERVER_USER_2: wc453707244
+      run: |
+        ssh ${SERVER_USER_1}@${SERVER_IP} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
+        ssh ${SERVER_USER_2}@${SERVER_IP} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
+        # ... 其他命令
