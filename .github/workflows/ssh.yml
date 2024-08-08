@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Setup SSH
+    - name: Setup SSH Key
       run: |
         # 创建 SSH 目录
         mkdir -p ~/.ssh
@@ -21,8 +21,19 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         # 设置私钥文件权限
         chmod 600 ~/.ssh/id_rsa
+
+    - name: Setup SSH Configuration
+      run: |
         # 创建 SSH 配置文件
         echo -e "Host *\n  StrictHostKeyChecking no\n  PasswordAuthentication no\n  CheckHostIP no\n  IdentitiesOnly yes\n  IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
+
+    - name: Display SSH Configuration
+      run: |
+        # 显示 SSH 配置文件内容
+        cat ~/.ssh/config
+
+    - name: Add Server to Known Hosts
+      run: |
         # 将服务器 IP 添加到 known_hosts 文件
         ssh-keyscan -H s7.serv00.com >> ~/.ssh/known_hosts
 
@@ -33,5 +44,5 @@ jobs:
         SERVER_USER_2: wc453707244
       run: |
         # 使用 SSH 执行命令
-        ssh -i ~/.ssh/id_rsa ${{ env.SERVER_USER_1 }}@${SERVER_IP} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
-        ssh -i ~/.ssh/id_rsa ${{ env.SERVER_USER_2 }}@${SERVER_IP} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
+        ssh -o IdentitiesOnly=yes -i ~/.ssh/id_rsa ${{ env.SERVER_USER_1 }}@${SERVER_IP} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
+        ssh -o IdentitiesOnly=yes -i ~/.ssh/id_rsa ${{ env.SERVER_USER_2 }}@${SERVER_IP} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
