@@ -14,8 +14,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install SSH client
-      run: sudo apt-get update && sudo apt-get install -y openssh-client
+    - name: Install SSH and Expect
+      run: sudo apt-get update && sudo apt-get install -y openssh-client expect
 
     - name: Execute SSH commands for User 1
       env:
@@ -50,4 +50,3 @@ jobs:
         send "exit\r"
         expect eof
         EOF
-
