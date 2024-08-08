@@ -1,48 +1,53 @@
-name: SSH and Execute Commands
+name: SSH Vless Keepalive
 
 on:
   workflow_dispatch:
   schedule:
-    # 每2小时执行一次
+    # 每两小时运行一次
     - cron: '0 */2 * * *'
 
 jobs:
-  ssh-execute:
+  keepalive:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup SSH Key
-      run: |
-        # 创建 SSH 目录
-        mkdir -p ~/.ssh
-        # 写入私钥到 id_rsa 文件
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        # 设置私钥文件权限
-        chmod 600 ~/.ssh/id_rsa
+    - name: Install SSH client
+      run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-    - name: Setup SSH Configuration
-      run: |
-        # 创建 SSH 配置文件
-        echo -e "Host *\n  StrictHostKeyChecking no\n  PasswordAuthentication no\n  CheckHostIP no\n  IdentitiesOnly yes\n  IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
-
-    - name: Display SSH Configuration
-      run: |
-        # 显示 SSH 配置文件内容
-        cat ~/.ssh/config
-
-    - name: Add Server to Known Hosts
-      run: |
-        # 将服务器 IP 添加到 known_hosts 文件
-        ssh-keyscan -H "s7.serv00.com" >> ~/.ssh/known_hosts
-
-    - name: Execute Commands
+    - name: Execute SSH commands for User 1
       env:
-        SERVER_IP: s7.serv00.com
-        SERVER_USER_1: wc453707243
-        SERVER_USER_2: wc453707244
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER1 }}
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
-        # 使用 SSH 执行命令
-        ssh -o IdentitiesOnly=yes -i ~/.ssh/id_rsa ${{ env.SERVER_USER_1 }}@${SERVER_IP} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
-        ssh -o IdentitiesOnly=yes -i ~/.ssh/id_rsa ${{ env.SERVER_USER_2 }}@${SERVER_IP} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
+        expect <<EOF
+        spawn ssh $SSH_USER@$SSH_HOST
+        expect "password:"
+        send "$SSH_PASSWORD\r"
+        expect "$ "
+        send "cd domains/${{ secrets.SSH_USER1 }}.serv00.net/ && screen -S vless node /home/${{ secrets.SSH_USER1 }}/domains/${{ secrets.SSH_USER1 }}.serv00.net/vless/app.js && screen -r vless\r"
+        expect "$ "
+        send "exit\r"
+        expect eof
+        EOF
+
+    - name: Execute SSH commands for User 2
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER2 }}
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      run: |
+        expect <<EOF
+        spawn ssh $SSH_USER@$SSH_HOST
+        expect "password:"
+        send "$SSH_PASSWORD\r"
+        expect "$ "
+        send "cd domains/${{ secrets.SSH_USER2 }}.serv00.net/ && screen -S vless node /home/${{ secrets.SSH_USER2 }}/domains/${{ secrets.SSH_USER2 }}.serv00.net/vless/app.js && screen -r vless\r"
+        expect "$ "
+        send "exit\r"
+        expect eof
+        EOF
+
