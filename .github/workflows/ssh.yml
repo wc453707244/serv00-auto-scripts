@@ -26,6 +26,6 @@ jobs:
         SERVER_USER_1: wc453707243
         SERVER_USER_2: wc453707244
       run: |
-        ssh ${SERVER_USER_1}@${SERVER_IP} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
-        ssh ${SERVER_USER_2}@${SERVER_IP} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
-        # ... 其他命令
+        # 使用 SSH 详细模式执行命令，以便调试
+        ssh -o StrictHostKeyChecking=no -vvv -i ~/.ssh/id_rsa ${{ env.SERVER_USER_1 }}@${SERVER_IP} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
+        ssh -o StrictHostKeyChecking=no -vvv -i ~/.ssh/id_rsa ${{ env.SERVER_USER_2 }}@${SERVER_IP} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
