@@ -1,6 +1,7 @@
 name: SSH and Execute Commands
 
 on:
+  workflow_dispatch:
   schedule:
     # 每2小时执行一次
     - cron: '0 */2 * * *'
