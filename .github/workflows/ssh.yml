@@ -45,10 +45,6 @@ jobs:
             send "$SSH_PASSWORD\r"
             exp_continue
           }
-          "Permission denied" {
-            send_user "Permission denied for wc453707243. Please check the password or SSH configuration.\n"
-            exit 1
-          }
           "$ " {
             send "echo '登录成功：wc453707243'\r"
             send "cd domains/${SSH_USER}.serv00.net/ && screen -S vless node /home/${SSH_USER}/domains/${SSH_USER}.serv00.net/vless/app.js && screen -r vless\r"
@@ -73,10 +69,6 @@ jobs:
           "password:" {
             send "$SSH_PASSWORD\r"
             exp_continue
-          }
-          "Permission denied" {
-            send_user "Permission denied for wc453707244. Please check the password or SSH configuration.\n"
-            exit 1
           }
           "$ " {
             send "echo '登录成功：wc453707244'\r"
