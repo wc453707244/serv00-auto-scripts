@@ -17,48 +17,60 @@ jobs:
     - name: Install SSH and Expect
       run: sudo apt-get update && sudo apt-get install -y openssh-client expect
 
-    - name: Execute SSH commands for User 1
+    - name: Execute SSH commands for wc453707243
       env:
         SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USER: ${{ secrets.SSH_USER1 }}
+        SSH_USER: wc453707243
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         expect <<EOF
+        set timeout 60
         spawn ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST
         expect {
           "(yes/no)" {send "yes\r"; exp_continue}
-          "password:" {send "$SSH_PASSWORD\r"}
+          "password:" {
+            send "$SSH_PASSWORD\r"
+            exp_continue
+          }
+          "Permission denied" {
+            send_user "Permission denied for wc453707243. Please check the password or SSH configuration.\n"
+            exit 1
+          }
+          "$ " {
+            send "echo '登录成功：wc453707243'\r"
+            send "cd domains/${SSH_USER}.serv00.net/ && screen -S vless node /home/${SSH_USER}/domains/${SSH_USER}.serv00.net/vless/app.js && screen -r vless\r"
+            send "echo '命令执行成功：wc453707243'\r"
+            send "exit\r"
+          }
         }
-        expect "$ "
-        send "echo 'Login successful for User 1'\r"
-        expect "$ "
-        send "cd domains/${{ secrets.SSH_USER1 }}.serv00.net/ && screen -S vless node /home/${{ secrets.SSH_USER1 }}/domains/${{ secrets.SSH_USER1 }}.serv00.net/vless/app.js && screen -r vless\r"
-        expect "$ "
-        send "echo 'Command execution successful for User 1'\r"
-        expect "$ "
-        send "exit\r"
         expect eof
         EOF
 
-    - name: Execute SSH commands for User 2
+    - name: Execute SSH commands for wc453707244
       env:
         SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USER: ${{ secrets.SSH_USER2 }}
+        SSH_USER: wc453707244
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         expect <<EOF
+        set timeout 60
         spawn ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST
         expect {
           "(yes/no)" {send "yes\r"; exp_continue}
-          "password:" {send "$SSH_PASSWORD\r"}
+          "password:" {
+            send "$SSH_PASSWORD\r"
+            exp_continue
+          }
+          "Permission denied" {
+            send_user "Permission denied for wc453707244. Please check the password or SSH configuration.\n"
+            exit 1
+          }
+          "$ " {
+            send "echo '登录成功：wc453707244'\r"
+            send "cd domains/${SSH_USER}.serv00.net/ && screen -S vless node /home/${SSH_USER}/domains/${SSH_USER}.serv00.net/vless/app.js && screen -r vless\r"
+            send "echo '命令执行成功：wc453707244'\r"
+            send "exit\r"
+          }
         }
-        expect "$ "
-        send "echo 'Login successful for User 2'\r"
-        expect "$ "
-        send "cd domains/${{ secrets.SSH_USER2 }}.serv00.net/ && screen -S vless node /home/${{ secrets.SSH_USER2 }}/domains/${{ secrets.SSH_USER2 }}.serv00.net/vless/app.js && screen -r vless\r"
-        expect "$ "
-        send "echo 'Command execution successful for User 2'\r"
-        expect "$ "
-        send "exit\r"
         expect eof
         EOF
