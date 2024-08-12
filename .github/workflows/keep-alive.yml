@@ -28,5 +28,5 @@ jobs:
         PASS2: ${{ secrets.PASS2 }} # 确保将密码存储在 secrets 中
       run: |
         # 使用 sshpass 执行命令，禁用 StrictHostKeyChecking
-        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
-        sshpass -p "${PASS2}" ssh -o StrictHostKeyChecking=no ${USER2}@${SERVER_SSH} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
+        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -dmS vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js"
+        sshpass -p "${PASS2}" ssh -o StrictHostKeyChecking=no ${USER2}@${SERVER_SSH} "cd domains/wc453707244.serv00.net/ && screen -dmS vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js"
