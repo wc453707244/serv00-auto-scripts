@@ -3,7 +3,7 @@ name: SSH and Execute Commands with Password
 on:
   workflow_dispatch:
   schedule:
-    # 你的调度计划
+    # 每两小时执行一次
     - cron: '0 */2 * * *'
 
 jobs:
@@ -27,6 +27,6 @@ jobs:
         USER2: wc453707244
         PASS2: ${{ secrets.PASS2 }} # 确保将密码存储在 secrets 中
       run: |
-        # 使用 sshpass 执行命令
-        sshpass -p "${PASS1}" ssh ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
-        sshpass -p "${PASS2}" ssh ${USER2}@${SERVER_SSH} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
+        # 使用 sshpass 执行命令，禁用 StrictHostKeyChecking
+        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
+        sshpass -p "${PASS2}" ssh -o StrictHostKeyChecking=no ${USER2}@${SERVER_SSH} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
