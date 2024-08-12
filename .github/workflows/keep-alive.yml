@@ -1,0 +1,30 @@
+name: Keep Vless Alive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check and Install sshpass
+      run: |
+        if ! command -v sshpass &> /dev/null; then
+          echo "sshpass could not be found, installing..."
+          sudo apt-get update && sudo apt-get install -y sshpass
+        else
+          echo "sshpass is already installed."
+        fi
+
+    - name: SSH and Execute Commands
+      env:
+        SERVER_SSH: s7.serv00.com
+        USER1: wc453707243
+        PASS1: Wc13850067698  # 建议使用GitHub Secrets来存储密码
+        USER2: wc453707244
+        PASS2: Wc13850067698  # 同上
+      run: |
+        sshpass -p ${PASS1} ssh ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -S vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js && screen -r vless"
+        sshpass -p ${PASS2} ssh ${USER2}@${SERVER_SSH} "cd domains/wc453707244.serv00.net/ && screen -S vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js && screen -r vless"
