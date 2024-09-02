@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # 每两小时执行一次
-    - cron: '0 */2 * * *'
+    - cron: '0 */1 * * *'
 
 jobs:
   ssh-execute:
