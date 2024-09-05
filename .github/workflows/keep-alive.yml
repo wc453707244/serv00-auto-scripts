@@ -33,6 +33,6 @@ jobs:
         # 使用 sshpass 执行命令，禁用 StrictHostKeyChecking
         sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -dmS vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js"
         sshpass -p "${PASS2}" ssh -o StrictHostKeyChecking=no ${USER2}@${SERVER_SSH} "cd domains/wc453707244.serv00.net/ && screen -dmS vless node /home/wc453707244/domains/wc453707244.serv00.net/vless/app.js"
-        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER3}@${SERVER_SSH_2} "cd domains/smithjhone474/ && screen -dmS vless node /home/smithjhone474/domains/sing-box/web run"
-        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER4}@${SERVER_SSH_2} "cd domains/smithjhone6590/ && screen -dmS vless node /home/smithjhone6590/domains/sing-box/web run"
+        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER3}@${SERVER_SSH_2} "cd domains/sing-box/ && screen -dmS vless node /home/smithjhone474/domains/sing-box/web run"
+        sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER4}@${SERVER_SSH_2} "cd domains/sing-box/ && screen -dmS vless node /home/smithjhone6590/domains/sing-box/web run"
         
