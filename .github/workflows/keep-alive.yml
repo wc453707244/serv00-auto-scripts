@@ -21,14 +21,14 @@ jobs:
 
     - name: Execute Commands with sshpass
       env:
-        SERVER_SSH: s15.serv00.com
+        SERVER_SSH: s7.serv00.com
         USER1: wc453707243
         PASS1: ${{ secrets.PASS1 }} # 确保将密码存储在 secrets 中
         USER2: wc453707244
         PASS2: ${{ secrets.PASS2 }} # 确保将密码存储在 secrets 中
         USER3: smithjhone474
         USER4: smithjhone6590
-        SERVER_SSH_2: s15.serv00.com
+        SERVER_SSH_2: s11.serv00.com
       run: |
         # 使用 sshpass 执行命令，禁用 StrictHostKeyChecking
         sshpass -p "${PASS1}" ssh -o StrictHostKeyChecking=no ${USER1}@${SERVER_SSH} "cd domains/wc453707243.serv00.net/ && screen -dmS vless node /home/wc453707243/domains/wc453707243.serv00.net/vless/app.js"
